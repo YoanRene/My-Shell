@@ -1,18 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <windows.h>
 #include <dirent.h>
+#include <string.h>
+
 
 #define SON_IGUALES(a, b) strcmp(a, b) == 0
-
-enum Colors
-{
-    BLACK = 0,
-    BLUE = 1,
-    MAGENTA = 5,
-    WHITE = 15
-};
 
 char cadena[BUFSIZ];
 char pwd[BUFSIZ];
@@ -47,28 +40,13 @@ void ls_function()
 }
 
 
-
-void Color(int Background, int Text)
-{ // Función para cambiar el color del fondo y/o pantalla
-
-    HANDLE Console = GetStdHandle(STD_OUTPUT_HANDLE); // Tomamos la consola.
-
-    // Para cambiar el color, se utilizan números desde el 0 hasta el 255.
-    // Pero, para convertir los colores a un valor adecuado, se realiza el siguiente cálculo.
-    int New_Color = Text + (Background * 16);
-
-    SetConsoleTextAttribute(Console, New_Color); // Guardamos los cambios en la Consola.
-}
-
 int main()
 {
     getcwd(pwd, BUFSIZ);
 
     while (1)
     {
-        Color(BLACK, MAGENTA);
         printf("my-prompt $ ");
-        Color(BLACK, WHITE);
         gets(cadena);
 
         if (SON_IGUALES(cadena, "ls"))
