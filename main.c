@@ -65,6 +65,9 @@ void cd_function(){
     if(dir!=NULL){
         strcpy(pwd,args);
     }
+    else{
+        printf("Directorio no encontrado\n");
+    }
 }
 
 
@@ -86,7 +89,9 @@ int main()
         else if (es_cd()){
             cd_function();
         }
-        
+        else {
+            printf("Comando desconocido\n");
+        }
     }
 
     return 0;
