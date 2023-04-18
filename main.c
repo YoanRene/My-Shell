@@ -4,11 +4,12 @@
 #include <dirent.h>
 #include <string.h>
 
-
 #define SON_IGUALES(a, b) strcmp(a, b) == 0
 
 char cadena[BUFSIZ];
 char pwd[BUFSIZ];
+char args[BUFSIZ];
+
 
 void pwd_fuction()
 {
@@ -39,6 +40,33 @@ void ls_function()
     }
 }
 
+int es_cd(){
+    if(cadena[0]=='c'&&cadena[1]=='d'&&(cadena[2]==' '||cadena[2]=='\0')){
+        return 1;
+    }
+    return 0;
+}
+
+void cd_function(){
+
+    for (int i = 3; i < BUFSIZ; i++)
+    {
+        args[i-3]=cadena[i];
+    }
+
+    if(SON_IGUALES(args,"")){
+        strcpy(pwd,"\\home");
+        return;
+    }
+
+    DIR *dir;
+    dir = opendir(args);
+
+    if(dir!=NULL){
+        strcpy(pwd,args);
+    }
+}
+
 
 int main()
 {
@@ -55,6 +83,9 @@ int main()
             exit_function();
         else if (SON_IGUALES(cadena, "pwd"))
             pwd_fuction();
+        else if (es_cd()){
+            cd_function();
+        }
         
     }
 
