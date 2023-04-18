@@ -46,33 +46,7 @@ void ls_function()
     }
 }
 
-void cd_function()
-{
-    char path[BUFSIZ];
-    int k = 0, i = 0;
 
-    while (i < BUFSIZ && cadena[i] == '\0')
-    {
-        i++;
-    }
-
-    while (i < BUFSIZ && cadena[i] != '\0')
-    {
-        path[k++] = cadena[i];
-        i++;
-    }
-
-    while(k<BUFSIZ){
-        path[k++]='\0';
-    }
-
-    DIR *dir;
-    dir = opendir(path); 
-
-    if(dir!=NULL){
-        *pwd=path;
-    }
-}
 
 void Color(int Background, int Text)
 { // Función para cambiar el color del fondo y/o pantalla
@@ -103,8 +77,7 @@ int main()
             exit_function();
         else if (SON_IGUALES(cadena, "pwd"))
             pwd_fuction();
-        else if (SON_IGUALES(cadena, "cd"))
-            cd_function();
+        
     }
 
     return 0;
