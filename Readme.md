@@ -4,5 +4,5 @@
 * ### Kevin Majim Ortega Álvarez
 
 ## Summary:
-This is a console application programmed in **C** with the goal of to simulate  **Shell** ;)
+This is a console application programmed in **C** with the goal of to simulate  **Shell ;)** 
 
