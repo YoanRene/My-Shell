@@ -16,6 +16,26 @@ void pwd_fuction()
     printf("%s\n", pwd);
 }
 
+void split()
+{
+    char no_necesary[]=" \n\t\0";
+    char *elemento=strtok(cadena,no_necesary);
+
+    int i=0;
+    while (elemento!=NULL)
+    {
+        for (int j = 0; j < strlen(elemento); j++)
+        {
+            splited[i][j]=elemento[j];
+        }
+        elemento=strtok(NULL,no_necesary);
+        i++;
+    }
+
+}
+
+
+
 void exit_function()
 {
     exit(EXIT_SUCCESS);
@@ -70,6 +90,16 @@ void cd_function(){
     }
 }
 
+void split_tuberia(){
+    array[0]=0;
+    for (int i = 0; i < 10; i++)
+    {
+        if(SON_IGUALES(splited[i],"|")){
+            array[1]=i;
+        }
+    }
+    
+}
 
 int main()
 {
