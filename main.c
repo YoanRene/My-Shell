@@ -9,11 +9,16 @@
 char cadena[BUFSIZ];
 char pwd[BUFSIZ];
 char args[BUFSIZ];
+char splited[10][BUFSIZ/10];
+int array_de_indices_de_comandos[2];
+int count_tuberias,hubo_tuberias;
+int index_read;
+char out[BUFSIZ];
 
 
 void pwd_fuction()
 {
-    printf("%s\n", pwd);
+    strcpy(out, pwd);
 }
 
 void split()
@@ -34,8 +39,6 @@ void split()
 
 }
 
-
-
 void exit_function()
 {
     exit(EXIT_SUCCESS);
@@ -46,6 +49,7 @@ void ls_function()
     DIR *dir;
     dir = opendir(pwd); // abrir direccion actual
     struct dirent *ent;
+    strcpy(out,"");
 
     if (dir != NULL)
     {
@@ -53,26 +57,19 @@ void ls_function()
         {
             if (!SON_IGUALES(ent->d_name, ".") && !SON_IGUALES(ent->d_name, ".."))
             {
-                printf("%s ", ent->d_name);
+                strcat(out,ent->d_name);
+                strcat(out," ");
             }
         }
-        printf("\n");
-    }
-}
+        strcat(out,"\n");
 
-int es_cd(){
-    if(cadena[0]=='c'&&cadena[1]=='d'&&(cadena[2]==' '||cadena[2]=='\0')){
-        return 1;
     }
-    return 0;
 }
 
 void cd_function(){
 
-    for (int i = 3; i < BUFSIZ; i++)
-    {
-        args[i-3]=cadena[i];
-    }
+
+    strcpy(args,splited[index_read+1]);
 
     if(SON_IGUALES(args,"")){
         strcpy(pwd,"\\home");
@@ -86,19 +83,26 @@ void cd_function(){
         strcpy(pwd,args);
     }
     else{
-        printf("Directorio no encontrado\n");
+        strcpy(out,"Directorio no encontrado\n");
     }
 }
 
 void split_tuberia(){
-    array[0]=0;
+    array_de_indices_de_comandos[0]=0;
     for (int i = 0; i < 10; i++)
     {
         if(SON_IGUALES(splited[i],"|")){
-            array[1]=i;
+            array_de_indices_de_comandos[1]=i+1;
+            count_tuberias++;
+            hubo_tuberias=1;
+            return;
         }
     }
     
+}
+
+int es_comando_valido(){
+    return (splited[index_read]=="ls"||splited[index_read]=="exit"||splited[index_read]=="cd"||splited[index_read]=="pwd");
 }
 
 int main()
@@ -107,21 +111,40 @@ int main()
 
     while (1)
     {
+        index_read=0;
+        count_tuberias=0;
+        hubo_tuberias=0;
         printf("my-prompt $ ");
-        gets(cadena);
-
-        if (SON_IGUALES(cadena, "ls"))
-            ls_function();
-        else if (SON_IGUALES(cadena, "exit"))
-            exit_function();
-        else if (SON_IGUALES(cadena, "pwd"))
-            pwd_fuction();
-        else if (es_cd()){
-            cd_function();
+        fgets(cadena,BUFSIZ,stdin);
+        split();
+        split_tuberia();
+        
+        while (count_tuberias>=0)
+        {
+            
+            if (SON_IGUALES(splited[index_read], "ls"))
+                ls_function();
+            else if (SON_IGUALES(splited[index_read], "exit"))
+                exit_function();
+            else if (SON_IGUALES(splited[index_read], "pwd"))
+                pwd_fuction();
+            else if (SON_IGUALES(splited[index_read], "cd"))
+                cd_function();
+            else
+                strcpy(out,"Comando desconocido\n");
+            
+            index_read=array_de_indices_de_comandos[1];
+            if(hubo_tuberias){
+                strcpy(splited[index_read+1],out);
+                hubo_tuberias=0;
+            }
+            else{
+                printf("%s",out);
+            }
+            count_tuberias--;
         }
-        else {
-            printf("Comando desconocido\n");
-        }
+        
+        
     }
 
     return 0;
