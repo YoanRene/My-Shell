@@ -88,7 +88,6 @@ void cd_function(){
 }
 
 void split_tuberia(){
-    array_de_indices_de_comandos[0]=0;
     for (int i = 0; i < 10; i++)
     {
         if(SON_IGUALES(splited[i],"|")){
