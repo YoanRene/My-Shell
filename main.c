@@ -12,7 +12,7 @@ char args[BUFSIZ];
 char splited[10][BUFSIZ/10];
 int command_2nd_index;
 int count_tuberias,hubo_tuberias;
-int index_read;
+int index_command;
 char out[BUFSIZ];
 
 
@@ -69,7 +69,7 @@ void ls_function()
 void cd_function(){
 
 
-    strcpy(args,splited[index_read+1]);
+    strcpy(args,splited[index_command+1]);
 
     if(SON_IGUALES(args,"")){
         strcpy(pwd,"\\home");
@@ -101,7 +101,7 @@ void split_tuberia(){
 }
 
 int es_comando_valido(){
-    return (splited[index_read]=="ls"||splited[index_read]=="exit"||splited[index_read]=="cd"||splited[index_read]=="pwd");
+    return (splited[index_command]=="ls"||splited[index_command]=="exit"||splited[index_command]=="cd"||splited[index_command]=="pwd");
 }
 
 int main()
@@ -110,7 +110,7 @@ int main()
 
     while (1)
     {
-        index_read=0;
+        index_command=0;
         count_tuberias=0;
         hubo_tuberias=0;
         printf("my-prompt $ ");
@@ -121,21 +121,21 @@ int main()
         while (count_tuberias>=0)
         {
             
-            if (SON_IGUALES(splited[index_read], "ls"))
+            if (SON_IGUALES(splited[index_command], "ls"))
                 ls_function();
-            else if (SON_IGUALES(splited[index_read], "exit"))
+            else if (SON_IGUALES(splited[index_command], "exit"))
                 exit_function();
-            else if (SON_IGUALES(splited[index_read], "pwd"))
+            else if (SON_IGUALES(splited[index_command], "pwd"))
                 pwd_fuction();
-            else if (SON_IGUALES(splited[index_read], "cd"))
+            else if (SON_IGUALES(splited[index_command], "cd"))
                 cd_function();
             else
                 strcpy(out,"Comando desconocido\n");
             
-            index_read=command_2nd_index;
+            index_command=command_2nd_index;
             if(hubo_tuberias){
-                if(SON_IGUALES(splited[index_read+1],""))
-                    strcpy(splited[index_read+1],out);
+                if(SON_IGUALES(splited[index_command+1],""))
+                    strcpy(splited[index_command+1],out);
                 out[0]='\0';
                 hubo_tuberias=0;
             }
