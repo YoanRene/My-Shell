@@ -10,7 +10,7 @@ char cadena[BUFSIZ];
 char pwd[BUFSIZ];
 char args[BUFSIZ];
 char splited[10][BUFSIZ/10];
-int array_de_indices_de_comandos[2];
+int command_2nd_index;
 int count_tuberias,hubo_tuberias;
 int index_read;
 char out[BUFSIZ];
@@ -91,7 +91,7 @@ void split_tuberia(){
     for (int i = 0; i < 10; i++)
     {
         if(SON_IGUALES(splited[i],"|")){
-            array_de_indices_de_comandos[1]=i+1;
+            command_2nd_index=i+1;
             count_tuberias++;
             hubo_tuberias=1;
             return;
@@ -132,9 +132,11 @@ int main()
             else
                 strcpy(out,"Comando desconocido\n");
             
-            index_read=array_de_indices_de_comandos[1];
+            index_read=command_2nd_index;
             if(hubo_tuberias){
-                strcpy(splited[index_read+1],out);
+                if(SON_IGUALES(splited[index_read+1],""))
+                    strcpy(splited[index_read+1],out);
+                out[0]='\0';
                 hubo_tuberias=0;
             }
             else{
