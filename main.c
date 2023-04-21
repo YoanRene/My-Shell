@@ -104,6 +104,17 @@ int es_comando_valido(){
     return (splited[index_command]=="ls"||splited[index_command]=="exit"||splited[index_command]=="cd"||splited[index_command]=="pwd");
 }
 
+void limpieza_de_signo_de_numero(){
+    for (int i = 0; i < BUFSIZ && cadena[i]!='\0'; i++)
+    {
+        if(cadena[i]=='#'){
+            cadena[i]='\0';
+            return;
+        }
+    }
+    
+}
+
 int main()
 {
     getcwd(pwd, BUFSIZ);
@@ -115,6 +126,7 @@ int main()
         hubo_tuberias=0;
         printf("my-prompt $ ");
         fgets(cadena,BUFSIZ,stdin);
+        limpieza_de_signo_de_numero();
         split();
         split_tuberia();
         
