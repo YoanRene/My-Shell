@@ -21,8 +21,18 @@ void pwd_fuction()
     strcpy(out, pwd);
 }
 
+void reset_splited(){
+    for (int i = 0; i < 10; i++)
+    {
+        splited[i][0]='\0';
+    }
+    
+}
+
 void split()
 {
+    reset_splited();
+
     char no_necesary[]=" \n\t\0";
     char *elemento=strtok(cadena,no_necesary);
 
@@ -33,6 +43,7 @@ void split()
         {
             splited[i][j]=elemento[j];
         }
+        splited[i][strlen(elemento)]='\0';
         elemento=strtok(NULL,no_necesary);
         i++;
     }
@@ -61,8 +72,6 @@ void ls_function()
                 strcat(out," ");
             }
         }
-        strcat(out,"\n");
-
     }
 }
 
@@ -81,9 +90,10 @@ void cd_function(){
 
     if(dir!=NULL){
         strcpy(pwd,args);
+        out[0]='\0';
     }
     else{
-        strcpy(out,"Directorio no encontrado\n");
+        strcpy(out,"Directorio no encontrado");
     }
 }
 
@@ -115,6 +125,7 @@ void limpieza_de_signo_de_numero(){
     
 }
 
+
 int main()
 {
     getcwd(pwd, BUFSIZ);
@@ -124,11 +135,14 @@ int main()
         index_command=0;
         count_tuberias=0;
         hubo_tuberias=0;
+
         printf("my-prompt $ ");
         fgets(cadena,BUFSIZ,stdin);
+        
         limpieza_de_signo_de_numero();
         split();
         split_tuberia();
+        out[0]='\0';
         
         while (count_tuberias>=0)
         {
@@ -142,7 +156,7 @@ int main()
             else if (SON_IGUALES(splited[index_command], "cd"))
                 cd_function();
             else
-                strcpy(out,"Comando desconocido\n");
+                strcpy(out,"Comando desconocido");
             
             index_command=command_2nd_index;
             if(hubo_tuberias){
@@ -152,11 +166,11 @@ int main()
                 hubo_tuberias=0;
             }
             else{
-                printf("%s",out);
+                if(out[0]!='\0')
+                    printf("%s\n",out);
             }
             count_tuberias--;
         }
-        
         
     }
 
