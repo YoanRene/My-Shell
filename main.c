@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
 
@@ -73,6 +75,13 @@ void ls_function()
             }
         }
     }
+}
+
+void help_function(){
+    int fd=open("help.txt",O_RDONLY);
+    
+    read(fd,out,BUFSIZ);
+    close(fd);
 }
 
 void cd_function(){
@@ -155,6 +164,8 @@ int main()
                 pwd_fuction();
             else if (SON_IGUALES(splited[index_command], "cd"))
                 cd_function();
+            else if (SON_IGUALES(splited[index_command],"help"))
+                help_function();
             else
                 strcpy(out,"Comando desconocido");
             

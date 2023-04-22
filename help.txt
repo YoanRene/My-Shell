@@ -1,0 +1,18 @@
+Integrantes: 
+Yoan Rene Ramos Corrales - C312
+Kevin Majim Ortega Alvarez - C312
+
+Funcionalidades:
+basic: funcionalidades basicas (3 puntos)
+help: ayuda (1 punto)
+
+Comandos built-in:
+cd: cambia de directorios
+exit: termina el shell
+help: muestra la ayuda del shell
+ls: muesta la lista de archivos y carpetas de un directorio
+echo: muestra el texto entrado despues del comando 
+
+Total: 4 puntos
+
+ 
