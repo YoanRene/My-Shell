@@ -23,9 +23,8 @@ void pwd_fuction()
     strcpy(out, pwd);
 }
 
-void reset_splited(){
-    for (int i = 0; i < 10; i++)
-    {
+void split(char no_necesary[])
+{
         splited[i][0]='\0';
     }
     
