@@ -14,5 +14,4 @@ ls: muesta la lista de archivos y carpetas de un directorio
 echo: muestra el texto entrado despues del comando 
 
 Total: 4 puntos
-
  
