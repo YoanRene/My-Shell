@@ -8,21 +8,40 @@
 #include <string.h>
 #include <ctype.h>
 
+/*
+Integrantes: 
+Yoan Rene Ramos Corrales - C312
+Kevin Majim Ortega Alvarez - C312
+
+Funcionalidades:
+basic: funcionalidades basicas (3 puntos)
+help: ayuda (1 punto)
+
+Comandos built-in:
+cd: cambia de directorios
+exit: termina el shell
+help: muestra la ayuda del shell
+ls: muesta la lista de archivos y carpetas de un directorio
+echo: muestra el texto entrado despues del comando 
+
+Total: 4 puntos*/
+
 #define SON_IGUALES(a, b) strcmp(a, b) == 0
 #define TAMANO 30
 
-char cadena[BUFSIZ];
 char pegado[BUFSIZ];
 char auxiliar1[BUFSIZ];
-char pwd[BUFSIZ];
-char args[BUFSIZ];
-char splited[TAMANO][BUFSIZ];
+
+char pwd[BUFSIZ];             //
+char cadena[BUFSIZ];          //
+char args[BUFSIZ];            // Importantes
+char splited[TAMANO][BUFSIZ]; //
+
 char splited_aux[TAMANO][BUFSIZ];
 int command_2nd_index;
 int count_tuberias;
 int index_command;
 char cadena_aux[BUFSIZ];
-char out[BUFSIZ];
 
 void reset_splited()
 {
@@ -54,55 +73,49 @@ void replace_blank_por_slash()
 {
     for (int i = 0; i < TAMANO; i++)
     {
-        for (int j = 0; j < BUFSIZ && splited[i][j]!='\0'; j++)
+        for (int j = 0; j < BUFSIZ && splited[i][j] != '\0'; j++)
         {
-            if(splited[i][j]=='\\')
-                splited[i][j]=' ';
+            if (splited[i][j] == '\\')
+                splited[i][j] = ' ';
         }
-        
     }
 }
 
 void recuperador_de_path_function_with_split()
 {
     split("\\");
-    strcpy(pegado,splited[0]);
-    int i=1;
-    while (i<TAMANO&&splited[i][0]!='\0')
+    strcpy(pegado, splited[0]);
+    int i = 1;
+    while (i < TAMANO && splited[i][0] != '\0')
     {
-        strcat(pegado,"\\");
+        strcat(pegado, "\\");
         for (int j = 1; j < BUFSIZ; j++)
         {
-            auxiliar1[j-1]=splited[i][j];
-            if(splited[i][j]=='\0'){
+            auxiliar1[j - 1] = splited[i][j];
+            if (splited[i][j] == '\0')
+            {
                 break;
             }
-        }  
-        
-        strcat(pegado,auxiliar1);
+        }
+
+        strcat(pegado, auxiliar1);
         i++;
     }
-    
-    strcpy(cadena,pegado);
+
+    strcpy(cadena, pegado);
     split(" \n\t\0");
     replace_blank_por_slash();
 }
 
-
-
 void echo_function()
 {
-    strcpy(out, splited[index_command + 1]);
+    printf("%s", args);
 }
 
 void pwd_fuction()
 {
-    strcpy(out, pwd);
+    printf("%s", pwd);
 }
-
-
-
-
 
 void exit_function()
 {
@@ -111,31 +124,25 @@ void exit_function()
 
 void ls_function()
 {
-    
+
     DIR *dir;
     dir = opendir(pwd); // abrir direccion actual
     struct dirent *ent;
-    strcpy(out, "");
 
     if (dir != NULL)
     {
         while ((ent = readdir(dir)) != NULL)
-        {
             if (!SON_IGUALES(ent->d_name, ".") && !SON_IGUALES(ent->d_name, ".."))
-            {
-                strcat(out, ent->d_name);
-                strcat(out, " ");
-            }
-        }
+                printf("%s ", ent->d_name);
     }
 }
 
 void help_function()
 {
-    int fd = open("help.txt", O_RDONLY);
+    //int fd = open("help.txt", O_RDONLY);
 
-    read(fd, out, BUFSIZ);
-    close(fd);
+    //read(fd, out, BUFSIZ);
+    //close(fd);
 }
 
 void cd_function()
@@ -148,38 +155,14 @@ void cd_function()
         strcpy(pwd, "\\home");
         return;
     }
-    strcpy(args,"/mnt/d/My Projects");
 
     DIR *dir;
     dir = opendir(args);
 
     if (dir != NULL)
-    {
         strcpy(pwd, args);
-        out[0] = '\0';
-    }
     else
-    {
-        strcpy(out, "Directorio no encontrado"); // perror("ERROR");exit(1);
-    }
-}
-
-void split_tuberia()
-{
-    for (int i = 0; i < TAMANO; i++)
-    {
-        if (SON_IGUALES(splited[i], "|"))
-        {
-            command_2nd_index = i + 1;
-            count_tuberias++;
-            return;
-        }
-    }
-}
-
-int es_comando_valido()
-{
-    return (splited[index_command] == "ls" || splited[index_command] == "exit" || splited[index_command] == "cd" || splited[index_command] == "pwd");
+        printf("%s", "Directorio no encontrado"); // perror("ERROR");exit(1);
 }
 
 void limpieza_de_signo_de_numero()
@@ -202,16 +185,54 @@ int main()
     {
         index_command = 0;
         count_tuberias = 0;
+        int fd_r;
+        int fd_w;
+
         printf("my-prompt $ ");
         fgets(cadena, BUFSIZ, stdin);
 
         limpieza_de_signo_de_numero();
         recuperador_de_path_function_with_split();
-        split_tuberia();
-        out[0] = '\0';
+        args[0] = '\0';
 
+        //OK
+        //int std_ini = dup(STDIN_FILENO);
+        int std_out = dup(STDOUT_FILENO);
+        //OK
         while (count_tuberias >= 0)
         {
+            int k = index_command+1;
+            while (SON_IGUALES(splited[k], ">")||SON_IGUALES(splited[k], ">>")||SON_IGUALES(splited[k], "<"))
+            {
+                if (SON_IGUALES(splited[k], ">"))
+                {
+                    fd_w = open(splited[k + 1], O_WRONLY | O_CREAT | O_TRUNC);
+                    if (fd_w != -1)
+                        dup2(fd_w, STDOUT_FILENO);
+                }
+                else if (SON_IGUALES(splited[k], ">>"))
+                {
+                    fd_w = open(splited[k + 1], O_WRONLY | O_CREAT | O_APPEND);
+                    if (fd_w != -1)
+                        dup2(fd_w, STDOUT_FILENO);
+                }
+                else
+                {
+                    fd_r = open(splited[k + 1], O_RDONLY);
+                    if (fd_r != -1)
+                        read(fd_r,args,BUFSIZ);
+                    close(fd_r);
+                }
+                k+=2;
+            }
+            //OK
+
+            int hay_in_out=(k!=1);
+            if(!hay_in_out){
+                if(!SON_IGUALES(splited[k],"|"))
+                    strcpy(args,splited[k]);
+            }
+
             if (SON_IGUALES(splited[index_command], "ls"))
                 ls_function();
             else if (SON_IGUALES(splited[index_command], "exit"))
@@ -227,26 +248,16 @@ int main()
             else
             {
                 if (isalnum(splited[index_command][0]) == 0)
-                {
-                    strcpy(out, "Error de sintaxis");
-                }
+                    printf("%s", "Error de sintaxis");
                 else
-                    strcpy(out, "Comando desconocido"); // fprintf(stderr,"ERROR");exit(1);
+                    printf("%s", "Comando desconocido"); // fprintf(stderr,"ERROR");exit(1);
             }
             index_command = command_2nd_index;
-            if (count_tuberias)
-            {
-                if (SON_IGUALES(splited[index_command + 1], ""))
-                    strcpy(splited[index_command + 1], out);
-                out[0] = '\0';
-            }
-            else
-            {
-                if (out[0] != '\0')
-                    printf("%s\n", out);
-            }
+           // dup2(std_ini, STDIN_FILENO);
+            dup2(std_out, STDOUT_FILENO);
             count_tuberias--;
         }
+        printf("\n");
     }
 
     return 0;
